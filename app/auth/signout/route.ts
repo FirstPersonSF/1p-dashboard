@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server'
 import { getSiteUrl } from '@/lib/getSiteUrl'
 
 export async function POST(request: NextRequest) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const domain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
 
   const supabase = createServerClient(
