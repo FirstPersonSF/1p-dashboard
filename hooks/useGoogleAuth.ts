@@ -47,9 +47,6 @@ export function useGoogleAuth(options: UseGoogleAuthOptions = {}): UseGoogleAuth
       }
     } catch (err) {
       console.error('Google sign-in error:', err)
-      console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
-      console.log('ANON_KEY set:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-      console.log('SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL)
       setError('Failed to initialize Google sign-in')
       setLoading(false)
     }
