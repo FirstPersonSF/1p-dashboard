@@ -20,6 +20,12 @@ function getSiteUrl(req: NextRequest): string {
 }
 
 export async function middleware(req: NextRequest) {
+  // Let the callback route handle auth code exchange without interference
+  if (req.nextUrl.pathname.startsWith('/auth/callback')) {
+    console.log('[middleware] passing through /auth/callback')
+    return NextResponse.next()
+  }
+
   let res = NextResponse.next({ request: { headers: req.headers } })
 
   const supabase = createServerClient(
