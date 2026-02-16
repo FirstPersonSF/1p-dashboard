@@ -1,5 +1,6 @@
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -9,9 +10,28 @@ export async function GET(request: Request) {
   console.log('[auth/callback] HIT - code:', !!code, '| next:', next)
 
   if (code) {
-    const supabase = await createServerClient()
+    const cookieStore = await cookies()
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            console.log('[auth/callback] setAll called:', cookiesToSet.map(c => c.name))
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options)
+            })
+          },
+        },
+      }
+    )
+
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    console.log('[auth/callback] exchangeCodeForSession error:', error)
+    console.log('[auth/callback] exchange result - error:', error?.message ?? 'none')
 
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host')
@@ -26,8 +46,10 @@ export async function GET(request: Request) {
       }
     }
 
+    console.log('[auth/callback] exchange FAILED:', error.message)
     return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`)
   }
 
+  console.log('[auth/callback] no code in URL')
   return NextResponse.redirect(`${origin}/login?error=no_code`)
 }
