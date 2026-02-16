@@ -1,5 +1,4 @@
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -8,7 +7,8 @@ export async function GET(request: Request) {
   const next = searchParams.get('redirect') || searchParams.get('next') || '/'
 
   if (code) {
-    const cookieStore = await cookies()
+    const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
+    const cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,11 +16,14 @@ export async function GET(request: Request) {
       {
         cookies: {
           getAll() {
-            return cookieStore.getAll()
+            return request.headers.get('cookie')?.split(';').map(c => {
+              const [name, ...rest] = c.trim().split('=')
+              return { name, value: rest.join('=') }
+            }) ?? []
           },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
+          setAll(cookies) {
+            cookies.forEach(({ name, value, options }) => {
+              cookiesToSet.push({ name, value, options: options || {} })
             })
           },
         },
@@ -33,13 +36,25 @@ export async function GET(request: Request) {
       const forwardedHost = request.headers.get('x-forwarded-host')
       const isLocalEnv = process.env.NODE_ENV === 'development'
 
+      let redirectUrl: string
       if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`)
+        redirectUrl = `${origin}${next}`
       } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
+        redirectUrl = `https://${forwardedHost}${next}`
       } else {
-        return NextResponse.redirect(`${origin}${next}`)
+        redirectUrl = `${origin}${next}`
       }
+
+      const response = NextResponse.redirect(redirectUrl)
+
+      cookiesToSet.forEach(({ name, value, options }) => {
+        response.cookies.set(name, value, {
+          ...options,
+          ...(cookieDomain ? { domain: cookieDomain, path: '/', sameSite: 'lax' as const, secure: true } : {}),
+        })
+      })
+
+      return response
     }
 
     return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`)
