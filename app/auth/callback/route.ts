@@ -1,83 +1,33 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { getSiteUrl, getSafeRedirect } from '@/lib/getSiteUrl'
+import { createServerClient } from '@/lib/supabase/server'
 
-function getCookieOptions() {
-  const domain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
-  if (!domain) return {}
-  return {
-    domain,
-    sameSite: 'lax' as const,
-    secure: true,
-    path: '/',
-  }
-}
-
-export async function GET(request: NextRequest) {
-  console.log('[auth/callback] HIT - url:', request.url)
-  console.log('[auth/callback] searchParams:', Object.fromEntries(new URL(request.url).searchParams))
-  const { searchParams } = new URL(request.url)
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const redirect = searchParams.get('redirect') || searchParams.get('next')
+  const next = searchParams.get('redirect') || searchParams.get('next') || '/'
 
-  const siteUrl = getSiteUrl(request)
-  const safeRedirect = getSafeRedirect(redirect, '/')
-
-  const redirectUrl = safeRedirect.startsWith('http') ? safeRedirect : `${siteUrl}${safeRedirect}`
+  console.log('[auth/callback] HIT - code:', !!code, '| next:', next)
 
   if (code) {
-    const cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll()
-          },
-          setAll(cookies) {
-            console.log('[auth/callback] setAll called with cookies:', cookies.map(c => c.name))
-            cookies.forEach(({ name, value, options }) => {
-              cookiesToSet.push({ name, value, options: options || {} })
-            })
-          },
-        },
-      }
-    )
-
+    const supabase = await createServerClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     console.log('[auth/callback] exchangeCodeForSession error:', error)
-    console.log('[auth/callback] cookiesToSet count:', cookiesToSet.length)
 
     if (!error) {
-      const baseCookieOptions = getCookieOptions()
+      const forwardedHost = request.headers.get('x-forwarded-host')
+      const isLocalEnv = process.env.NODE_ENV === 'development'
 
-      const response = new NextResponse(
-        `<!DOCTYPE html>
-        <html>
-          <head>
-            <meta http-equiv="refresh" content="0;url=${redirectUrl}">
-            <script>window.location.href = "${redirectUrl}";</script>
-          </head>
-          <body><p>Redirecting...</p></body>
-        </html>`,
-        { status: 200, headers: { 'Content-Type': 'text/html' } }
-      )
-
-      cookiesToSet.forEach(({ name, value, options }) => {
-        response.cookies.set(name, value, {
-          ...options,
-          ...baseCookieOptions,
-        })
-      })
-
-      return response
+      if (isLocalEnv) {
+        return NextResponse.redirect(`${origin}${next}`)
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${next}`)
+      } else {
+        return NextResponse.redirect(`${origin}${next}`)
+      }
     }
 
-    return NextResponse.redirect(`${siteUrl}/login?error=${encodeURIComponent(error.message)}`)
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`)
   }
 
-  return NextResponse.redirect(`${siteUrl}/login?error=no_code`)
+  return NextResponse.redirect(`${origin}/login?error=no_code`)
 }
