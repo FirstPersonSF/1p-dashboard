@@ -42,7 +42,7 @@ export async function middleware(req: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             res.cookies.set(name, value, {
               ...options,
-              ...(cookieDomain ? { domain: cookieDomain, path: '/', sameSite: 'lax' as const, secure: true } : {}),
+              ...(cookieDomain ? { domain: cookieDomain, path: '/', sameSite: 'lax' as const, secure: true, httpOnly: false } : {}),
             })
           )
         },
