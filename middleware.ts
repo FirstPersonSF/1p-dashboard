@@ -47,6 +47,7 @@ export async function middleware(req: NextRequest) {
 
   const siteUrl = getSiteUrl(req)
   const isAuthRoute = req.nextUrl.pathname === '/login' || req.nextUrl.pathname.startsWith('/auth/')
+  console.log('[middleware] isAuthRoute:', isAuthRoute, '| siteUrl:', siteUrl)
 
   if (!isAuthRoute && (!user || error)) {
     const redirectUrl = new URL('/login', siteUrl)

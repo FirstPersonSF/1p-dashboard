@@ -15,6 +15,8 @@ function getCookieOptions() {
 }
 
 export async function GET(request: NextRequest) {
+  console.log('[auth/callback] HIT - url:', request.url)
+  console.log('[auth/callback] searchParams:', Object.fromEntries(new URL(request.url).searchParams))
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const redirect = searchParams.get('redirect') || searchParams.get('next')
