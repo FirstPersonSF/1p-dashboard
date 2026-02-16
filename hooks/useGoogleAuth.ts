@@ -27,9 +27,9 @@ export function useGoogleAuth(options: UseGoogleAuthOptions = {}): UseGoogleAuth
 
     try {
       const supabase = getSupabaseClient()
-      const baseUrl = siteUrl
+      const baseUrl = (siteUrl
         || process.env.NEXT_PUBLIC_SITE_URL
-        || (typeof window !== 'undefined' ? window.location.origin : '')
+        || (typeof window !== 'undefined' ? window.location.origin : '')).trim()
 
       const fullRedirectTo = `${baseUrl}${callbackPath}?redirect=${encodeURIComponent(redirectTo)}`
       console.log('[useGoogleAuth] redirectTo:', fullRedirectTo)
