@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
             return request.cookies.getAll()
           },
           setAll(cookies) {
+            console.log('[auth/callback] setAll called with cookies:', cookies.map(c => c.name))
             cookies.forEach(({ name, value, options }) => {
               cookiesToSet.push({ name, value, options: options || {} })
             })
@@ -45,6 +46,8 @@ export async function GET(request: NextRequest) {
     )
 
     const { error } = await supabase.auth.exchangeCodeForSession(code)
+    console.log('[auth/callback] exchangeCodeForSession error:', error)
+    console.log('[auth/callback] cookiesToSet count:', cookiesToSet.length)
 
     if (!error) {
       const baseCookieOptions = getCookieOptions()

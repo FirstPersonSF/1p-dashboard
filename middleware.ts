@@ -42,6 +42,8 @@ export async function middleware(req: NextRequest) {
   )
 
   const { data: { user }, error } = await supabase.auth.getUser()
+  console.log('[middleware]', req.nextUrl.pathname, '| user:', user?.email ?? 'null', '| error:', error?.message ?? 'none')
+  console.log('[middleware] cookies:', req.cookies.getAll().map(c => c.name))
 
   const siteUrl = getSiteUrl(req)
   const isAuthRoute = req.nextUrl.pathname === '/login' || req.nextUrl.pathname.startsWith('/auth/')
