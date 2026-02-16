@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -7,7 +8,8 @@ export async function GET(request: Request) {
   const next = searchParams.get('redirect') || searchParams.get('next') || '/'
 
   if (code) {
-    const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
+    const cookieStore = await cookies()
+    const cookieDomain = process.env.COOKIE_DOMAIN
     const cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
 
     const supabase = createServerClient(
@@ -16,10 +18,7 @@ export async function GET(request: Request) {
       {
         cookies: {
           getAll() {
-            return request.headers.get('cookie')?.split(';').map(c => {
-              const [name, ...rest] = c.trim().split('=')
-              return { name, value: rest.join('=') }
-            }) ?? []
+            return cookieStore.getAll()
           },
           setAll(cookies) {
             cookies.forEach(({ name, value, options }) => {
