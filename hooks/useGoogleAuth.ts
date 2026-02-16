@@ -31,13 +31,10 @@ export function useGoogleAuth(options: UseGoogleAuthOptions = {}): UseGoogleAuth
         || process.env.NEXT_PUBLIC_SITE_URL
         || (typeof window !== 'undefined' ? window.location.origin : '')).trim()
 
-      const fullRedirectTo = `${baseUrl}${callbackPath}?redirect=${encodeURIComponent(redirectTo)}`
-      console.log('[useGoogleAuth] redirectTo:', fullRedirectTo)
-
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: fullRedirectTo,
+          redirectTo: `${baseUrl}${callbackPath}?redirect=${encodeURIComponent(redirectTo)}`,
           queryParams: {
             prompt: 'select_account',
           },

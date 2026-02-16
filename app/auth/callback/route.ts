@@ -7,8 +7,6 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const next = searchParams.get('redirect') || searchParams.get('next') || '/'
 
-  console.log('[auth/callback] HIT - code:', !!code, '| next:', next)
-
   if (code) {
     const cookieStore = await cookies()
 
@@ -21,7 +19,6 @@ export async function GET(request: Request) {
             return cookieStore.getAll()
           },
           setAll(cookiesToSet) {
-            console.log('[auth/callback] setAll called:', cookiesToSet.map(c => c.name))
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options)
             })
@@ -31,7 +28,6 @@ export async function GET(request: Request) {
     )
 
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    console.log('[auth/callback] exchange result - error:', error?.message ?? 'none')
 
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host')
@@ -46,10 +42,8 @@ export async function GET(request: Request) {
       }
     }
 
-    console.log('[auth/callback] exchange FAILED:', error.message)
     return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`)
   }
 
-  console.log('[auth/callback] no code in URL')
   return NextResponse.redirect(`${origin}/login?error=no_code`)
 }

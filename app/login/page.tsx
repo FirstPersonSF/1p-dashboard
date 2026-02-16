@@ -1,7 +1,6 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 import { Suspense } from 'react'
 import { useGoogleAuth } from '@/hooks/useGoogleAuth'
 import { GoogleIcon } from '@/components/GoogleIcon'
@@ -10,12 +9,6 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirect') || '/'
   const errorParam = searchParams.get('error')
-
-  useEffect(() => {
-    console.log('[login] full URL:', window.location.href)
-    console.log('[login] hash:', window.location.hash)
-    console.log('[login] search:', window.location.search)
-  }, [])
 
   const { signInWithGoogle, loading, error } = useGoogleAuth({
     redirectTo,

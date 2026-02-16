@@ -22,7 +22,6 @@ function getSiteUrl(req: NextRequest): string {
 export async function middleware(req: NextRequest) {
   // Let the callback route handle auth code exchange without interference
   if (req.nextUrl.pathname.startsWith('/auth/callback')) {
-    console.log('[middleware] passing through /auth/callback')
     return NextResponse.next()
   }
 
@@ -48,12 +47,9 @@ export async function middleware(req: NextRequest) {
   )
 
   const { data: { user }, error } = await supabase.auth.getUser()
-  console.log('[middleware]', req.nextUrl.pathname, '| user:', user?.email ?? 'null', '| error:', error?.message ?? 'none')
-  console.log('[middleware] cookies:', req.cookies.getAll().map(c => c.name))
 
   const siteUrl = getSiteUrl(req)
   const isAuthRoute = req.nextUrl.pathname === '/login' || req.nextUrl.pathname.startsWith('/auth/')
-  console.log('[middleware] isAuthRoute:', isAuthRoute, '| siteUrl:', siteUrl)
 
   if (!isAuthRoute && (!user || error)) {
     const redirectUrl = new URL('/login', siteUrl)
