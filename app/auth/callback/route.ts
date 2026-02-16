@@ -47,10 +47,15 @@ export async function GET(request: Request) {
       const response = NextResponse.redirect(redirectUrl)
 
       cookiesToSet.forEach(({ name, value, options }) => {
-        response.cookies.set(name, value, {
-          ...options,
-          ...(cookieDomain ? { domain: cookieDomain, path: '/', sameSite: 'lax' as const, secure: true, httpOnly: false } : {}),
-        })
+        const opts = { ...options }
+        if (cookieDomain) {
+          opts.domain = cookieDomain
+          opts.path = '/'
+          opts.sameSite = 'lax'
+          opts.secure = true
+          opts.httpOnly = false
+        }
+        response.cookies.set(name, value, opts)
       })
 
       return response
