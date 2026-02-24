@@ -55,17 +55,20 @@ export async function middleware(req: NextRequest) {
     }
   )
 
-  const { data: { user }, error } = await supabase.auth.getUser()
+  // Use getSession() for fast cookie-based auth check (no network call).
+  // Token validity is enforced by Supabase on actual data queries.
+  const { data: { session } } = await supabase.auth.getSession()
+  const user = session?.user ?? null
 
   const siteUrl = getSiteUrl(req)
   const isAuthRoute = req.nextUrl.pathname === '/login' || req.nextUrl.pathname.startsWith('/auth/')
 
-  if (!isAuthRoute && (!user || error)) {
+  if (!isAuthRoute && !user) {
     const redirectUrl = new URL('/login', siteUrl)
     return NextResponse.redirect(redirectUrl)
   }
 
-  if (req.nextUrl.pathname === '/login' && user && !error) {
+  if (req.nextUrl.pathname === '/login' && user) {
     return NextResponse.redirect(new URL('/', siteUrl))
   }
 
