@@ -36,7 +36,10 @@ export async function GET(request: Request) {
       const isLocalEnv = process.env.NODE_ENV === 'development'
 
       let redirectUrl: string
-      if (isLocalEnv) {
+      // If `next` is an absolute URL (from cross-app auth), use it directly
+      if (next.startsWith('http://') || next.startsWith('https://')) {
+        redirectUrl = next
+      } else if (isLocalEnv) {
         redirectUrl = `${origin}${next}`
       } else if (forwardedHost) {
         redirectUrl = `https://${forwardedHost}${next}`
