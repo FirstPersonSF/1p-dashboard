@@ -10,5 +10,5 @@ export const tools: Tool[] = [
   { name: "Markdown to Google Docs", description: "Convert markdown to Google Docs", url: "https://gdocs.1p.is" },
   { name: "Mission Control", description: "Operations dashboard", url: "https://mc2.1p.is" },
   { name: "Video Narrative Analyzer", description: "AI-powered video narrative analysis", url: "https://video.tools.1p.is" },
-  { name: "Persona Panel", description: "First-person feedback from synthetic B2B personas", url: "https://web-production-0d3ad.up.railway.app" },
+  { name: "Persona Panel", description: "First-person feedback from synthetic B2B personas", url: "https://persona.1p.is" },
 ]
