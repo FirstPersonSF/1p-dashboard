@@ -7,16 +7,16 @@ export interface Tool {
 
 export const tools: Tool[] = [
   {
-    name: "Social Builder",
-    description: "Social media content builder",
-    url: "https://socialbuilder.1p.is",
-    icon: "megaphone",
+    name: "Mission Control",
+    description: "Operations dashboard",
+    url: "https://mc2.1p.is",
+    icon: "gauge",
   },
   {
-    name: "Fathom Meeting",
-    description: "Meeting analysis dashboard",
-    url: "https://fathom.1p.is",
-    icon: "microphone",
+    name: "Estimator",
+    description: "Project estimation tool",
+    url: "https://estimator.1p.is",
+    icon: "estimator",
   },
   {
     name: "Markdown to Google Docs",
@@ -25,10 +25,10 @@ export const tools: Tool[] = [
     icon: "document",
   },
   {
-    name: "Mission Control",
-    description: "Operations dashboard",
-    url: "https://mc2.1p.is",
-    icon: "gauge",
+    name: "Persona Panel",
+    description: "First-person feedback from synthetic B2B personas",
+    url: "https://persona.1p.is",
+    icon: "users",
   },
   {
     name: "Video Narrative Analyzer",
@@ -37,15 +37,15 @@ export const tools: Tool[] = [
     icon: "film",
   },
   {
-    name: "Persona Panel",
-    description: "First-person feedback from synthetic B2B personas",
-    url: "https://persona.1p.is",
-    icon: "users",
+    name: "Fathom Meeting",
+    description: "Meeting analysis dashboard",
+    url: "https://fathom.1p.is",
+    icon: "microphone",
   },
   {
-    name: "Estimator",
-    description: "Project estimation tool",
-    url: "https://estimator.1p.is",
-    icon: "estimator",
+    name: "Social Builder",
+    description: "Social media content builder",
+    url: "https://socialbuilder.1p.is",
+    icon: "megaphone",
   },
 ]
