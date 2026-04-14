@@ -53,6 +53,16 @@ const icons: Record<string, React.ReactNode> = {
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   ),
+  estimator: (
+    <svg viewBox="0 0 48 48" role="img" aria-label="Estimator">
+      <circle cx="24" cy="24" r="24" fill="#0075C9" />
+      <g stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round">
+        <line x1="12.5" y1="16" x2="25.5" y2="16" />
+        <line x1="12.5" y1="24" x2="28.5" y2="24" />
+        <line x1="12.5" y1="32" x2="32.5" y2="32" />
+      </g>
+    </svg>
+  ),
 }
 
 export function ToolIcon({ name, className }: { name: string; className?: string }) {

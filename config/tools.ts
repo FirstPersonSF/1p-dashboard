@@ -42,4 +42,10 @@ export const tools: Tool[] = [
     url: "https://persona.1p.is",
     icon: "users",
   },
+  {
+    name: "Estimator",
+    description: "Project estimation tool",
+    url: "https://estimator.1p.is",
+    icon: "estimator",
+  },
 ]
