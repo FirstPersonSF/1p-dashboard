@@ -13,12 +13,6 @@ export const tools: Tool[] = [
     icon: "gauge",
   },
   {
-    name: "Estimator",
-    description: "Project estimation tool",
-    url: "https://estimator.1p.is",
-    icon: "estimator",
-  },
-  {
     name: "Markdown to Google Docs",
     description: "Convert markdown to Google Docs",
     url: "https://gdocs.1p.is",

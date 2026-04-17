@@ -27,10 +27,13 @@ const icons: Record<string, React.ReactNode> = {
     </svg>
   ),
   gauge: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-      <path d="M12 6v6l4 2" />
-      <circle cx="12" cy="12" r="1" />
+    <svg viewBox="0 0 48 48" role="img" aria-label="Mission Control">
+      <circle cx="24" cy="24" r="24" fill="#0075C9" />
+      <g stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round">
+        <line x1="12.5" y1="16" x2="25.5" y2="16" />
+        <line x1="12.5" y1="24" x2="28.5" y2="24" />
+        <line x1="12.5" y1="32" x2="32.5" y2="32" />
+      </g>
     </svg>
   ),
   film: (
@@ -51,16 +54,6 @@ const icons: Record<string, React.ReactNode> = {
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  ),
-  estimator: (
-    <svg viewBox="0 0 48 48" role="img" aria-label="Estimator">
-      <circle cx="24" cy="24" r="24" fill="#0075C9" />
-      <g stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round">
-        <line x1="12.5" y1="16" x2="25.5" y2="16" />
-        <line x1="12.5" y1="24" x2="28.5" y2="24" />
-        <line x1="12.5" y1="32" x2="32.5" y2="32" />
-      </g>
     </svg>
   ),
 }
