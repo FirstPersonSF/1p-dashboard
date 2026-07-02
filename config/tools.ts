@@ -37,6 +37,12 @@ export const tools: Tool[] = [
     icon: "microphone",
   },
   {
+    name: "Meeting Synthesizer",
+    description: "Decisions, actions & visual moments from a recording",
+    url: "https://meeting-synth.1p.is",
+    icon: "sparkles",
+  },
+  {
     name: "Social Builder",
     description: "Social media content builder",
     url: "https://socialbuilder.1p.is",

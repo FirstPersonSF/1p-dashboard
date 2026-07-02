@@ -56,6 +56,13 @@ const icons: Record<string, React.ReactNode> = {
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   ),
+  sparkles: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3l1.9 4.8L18.5 9.6l-4.6 1.9L12 16.2l-1.9-4.7L5.5 9.6l4.6-1.8L12 3z" />
+      <path d="M19 14l.8 2.1 2.2.9-2.2.9L19 20l-.8-2.1-2.2-.9 2.2-.9L19 14z" />
+      <path d="M5 15l.6 1.6 1.7.7-1.7.7L5 19.6l-.6-1.6L2.7 17.3l1.7-.7L5 15z" />
+    </svg>
+  ),
 }
 
 export function ToolIcon({ name, className }: { name: string; className?: string }) {
