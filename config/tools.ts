@@ -48,4 +48,10 @@ export const tools: Tool[] = [
     url: "https://socialbuilder.1p.is",
     icon: "megaphone",
   },
+  {
+    name: "Market Leadership Scorecard",
+    description: "Benchmark market leadership across competitors",
+    url: "https://scorecard.1p.is/dashboard",
+    icon: "chart",
+  },
 ]

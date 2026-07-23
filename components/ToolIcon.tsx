@@ -63,6 +63,14 @@ const icons: Record<string, React.ReactNode> = {
       <path d="M5 15l.6 1.6 1.7.7-1.7.7L5 19.6l-.6-1.6L2.7 17.3l1.7-.7L5 15z" />
     </svg>
   ),
+  chart: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" y1="20" x2="20" y2="20" />
+      <rect x="6" y="12" width="3" height="6" />
+      <rect x="11" y="8" width="3" height="10" />
+      <rect x="16" y="4" width="3" height="14" />
+    </svg>
+  ),
 }
 
 export function ToolIcon({ name, className }: { name: string; className?: string }) {
