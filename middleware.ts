@@ -19,7 +19,20 @@ function getSiteUrl(req: NextRequest): string {
   return 'http://localhost:3000'
 }
 
+// Supabase's OAuth server builds its consent link from the project Site URL,
+// which is this app (the shared .1p.is login). The consent page itself lives
+// in Mission Control, so forward there before the login check — that check
+// drops the path and would lose the authorization_id. Mission Control's page
+// handles sign-in itself and returns to the consent screen.
+const MC2_URL = process.env.MC2_URL || 'https://mc2.1p.is'
+
 export async function middleware(req: NextRequest) {
+  if (req.nextUrl.pathname === '/oauth/consent') {
+    const target = new URL('/oauth/consent', MC2_URL)
+    target.search = req.nextUrl.search
+    return NextResponse.redirect(target, 307)
+  }
+
   // Let the callback route handle auth code exchange without interference
   if (req.nextUrl.pathname.startsWith('/auth/callback')) {
     return NextResponse.next()
